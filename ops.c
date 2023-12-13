@@ -1,4 +1,5 @@
 #include "monty.h"
+#include "globals.h"
 
 /**
  * my_push - adds new node to lls if it exists creates new if not
@@ -18,7 +19,7 @@ void my_push(stack_t **stack, unsigned int line_number)
 		{
 			return;
 		}
-		(*stack)->n = line_number;
+		(*stack)->n = atoi(lines[line_number][1]);
 		(*stack)->prev = NULL;
 		(*stack)->next = NULL;
 	}
@@ -29,7 +30,7 @@ void my_push(stack_t **stack, unsigned int line_number)
 		{
 			return;
 		}
-		new_node->n = line_number;
+		new_node->n = atoi(lines[line_number][1]);
 		new_node->prev = NULL;
 		new_node->next = *stack;
 

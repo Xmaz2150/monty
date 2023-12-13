@@ -1,4 +1,7 @@
 #include "monty.h"
+#include "arr.h"
+
+char *read_file(FILE *file);
 
 /**
  * main - entry point
@@ -11,7 +14,6 @@
 int main(int ac, char **av)
 {
 	FILE *file;
-	int c, bytes, i;
 	char *sample;
 	stack_t *my_stack;
 	node_st *raw_codes;
@@ -27,12 +29,37 @@ int main(int ac, char **av)
 	file = fopen(av[1], "r");
 	if (file == NULL)
 		return (1);
+	sample = read_file(file);
+
+	fclose(file);
+	raw_codes = create_input_list(sample, TOKKEN_DELIMS);
+	lines = create_iL_arr(raw_codes);
+	_execute(&my_stack);
+
+	free(sample);
+	free_input_list(raw_codes);
+	free_stack_list(my_stack);
+	free_iL_arr();
+	return (0);
+}
+
+/**
+ * read_file - reads all char in:
+ * @file: Input, file
+ *
+ * Return: char(s) read
+ */
+char *read_file(FILE *file)
+{
+	char *sample;
+	int c, bytes, i;
+
 	bytes = 0;
 	while ((c = fgetc(file)) != EOF)
 		bytes++;
 	sample = malloc(bytes + 1);
 	if (sample == NULL)
-		return (2);
+		return (NULL);
 	fseek(file, 0, SEEK_SET);
 	i = 0;
 	while ((c = fgetc(file)) != EOF)
@@ -41,45 +68,34 @@ int main(int ac, char **av)
 		i++;
 	}
 	sample[i] = '\n';
-	fclose(file);
-	raw_codes = create_input_list(sample, TOKKEN_DELIMS);
-	_execute(raw_codes, &my_stack);
-
-	free(sample);
-	free_input_list(raw_codes);
-	free_stack_list(my_stack);
-	return (0);
+	return (sample);
 }
 
 /**
  * _execute - executes codes
- * @raw_codes: Input, all instructions
  * @my_stack: Input, stack
  *
  * Return: none
  */
-void _execute(node_st *raw_codes, stack_t **my_stack)
+void _execute(stack_t **my_stack)
 {
-	node_st *tmp;
+	char ***tmp;
 	unsigned int n;
 
-	tmp = raw_codes;
-	while (tmp != NULL)
+	n = 0;
+	tmp = lines;
+	while (tmp[n] != NULL)
 	{
-		if (strcmp(tmp->word, "push") == 0)
+		if (strcmp(tmp[n][0], "push") == 0)
 		{
-			n = atoi(tmp->next->word);
 			my_push(my_stack, n);
 		}
 		else
 		{
-			if (is_code(tmp->word, my_stack) != 0)
-			{
-				if (!atoi(tmp->word))
-					print_err(str_concat("L2: unknown instruction ", tmp->word));
-			}
+			if (is_code(tmp[n][0], my_stack, n) != 0)
+				print_err(str_concat("L2: unknown instruction ", tmp[n][0]));
 		}
-		tmp = tmp->next;
+		n++;
 	}
 }
 
@@ -87,10 +103,11 @@ void _execute(node_st *raw_codes, stack_t **my_stack)
  * is_code - checks if str is valid code
  * @str: Input, str to check
  * @my_stack: Input, stack
+ * @l_num: Input, code line #
  *
  * Return: status
  */
-int is_code(char *str, stack_t **my_stack)
+int is_code(char *str, stack_t **my_stack, int l_num)
 {
 	int i;
 	instruction_t codes[] = {
@@ -108,7 +125,7 @@ int is_code(char *str, stack_t **my_stack)
 	{
 		if (strcmp(str, codes[i].opcode) == 0)
 		{
-			codes[i].f(my_stack, 0);
+			codes[i].f(my_stack, l_num);
 			return (0);
 		}
 		i++;

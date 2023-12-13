@@ -8,8 +8,8 @@
 #include <string.h>
 #include <ctype.h>
 
-#define TOKKEN_DELIMS " \t\n"
-#define TOKKEN_DELIMS2 " "
+#define TOKKEN_DELIMS "\n"
+#define TOKKEN_DELIMS2 " \t"
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -48,7 +48,7 @@ typedef struct Node_st
 } node_st;
 
 /* main */
-void _execute(node_st *raw_codes, stack_t **my_stack);
+void _execute(stack_t **my_stack);
 
 void my_push(stack_t **stack, unsigned int line_number);
 void my_pall(stack_t **stack, unsigned int line_number);
@@ -59,18 +59,23 @@ void my_add(stack_t **stack, unsigned int line_number);
 void my_nop(stack_t **stack, unsigned int line_number);
 
 /*  */
-int is_code(char *str, stack_t **my_stack);
+int is_code(char *str, stack_t **my_stack, int l_num);
 
 /* helper nodes*/
 void add_word(node_st **head, char *word);
 node_st *create_input_list(char *input, const char *delimiters);
 void free_input_list(node_st *head);
 void free_stack_list(stack_t *head);
+void free_iL_arr(void);
+
 /* helpers */
 int _putchar(char c);
 void print_err(char *message);
 int str_to_int(const char *str, int *result);
 void print_list(stack_t *head);
+
+char ***create_iL_arr(node_st *raw_codes);
+int list_st_count(node_st *raw_codes);
 
 /*str*/
 char *_strdup(char *str);
