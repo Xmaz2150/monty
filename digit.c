@@ -3,40 +3,24 @@
 /**
  * str_to_int - convserts intto string
  * @str: Input, str to convert
- * @result: Input, addr of new it
  *
- * Return: status(0) persfect+
+ * Return: int
  */
 
-int str_to_int(const char *str, int *result)
+int str_to_int(const char *str)
 {
 	int i;
-	int new_int = atoi(str);
+	int new_int;
 
-	if (new_int > 0)
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		printf("positive %s\n", str);
-		*result = new_int;
-		return (0);
+		if (str[i] == '-')
+			continue;
+		if (!(str[i] >= '0' && str[i] <= '9'))
+			return (-1);
 	}
-	else if (new_int < 0)
-	{
-		printf("negative %s\n", str);
-		return (-1);
-	}
-	else
-	{
-		for (i = 0; str[i] != '\0'; i++)
-		{
-			if (isdigit(str[i]))
-			{
-				printf("characters %s\n", str);
-				return (1);
-			}
-		}
-		*result = 0;
-	return (1);
-	}
+	new_int = atoi(str);
+	return (new_int);
 }
 
 /**

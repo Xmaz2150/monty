@@ -11,7 +11,14 @@
 void my_push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new_node;
+	int val;
 
+	val = str_to_int(lines[line_number][1]);
+	if (val == -1)
+	{
+		print_err("L6: usage: push integer");
+		exit(EXIT_FAILURE);
+	}
 	if (*stack == NULL)
 	{
 		*stack = (stack_t *)malloc(sizeof(stack_t));
@@ -19,7 +26,7 @@ void my_push(stack_t **stack, unsigned int line_number)
 		{
 			return;
 		}
-		(*stack)->n = atoi(lines[line_number][1]);
+		(*stack)->n = val;
 		(*stack)->prev = NULL;
 		(*stack)->next = NULL;
 	}
@@ -30,7 +37,7 @@ void my_push(stack_t **stack, unsigned int line_number)
 		{
 			return;
 		}
-		new_node->n = atoi(lines[line_number][1]);
+		new_node->n = val;
 		new_node->prev = NULL;
 		new_node->next = *stack;
 

@@ -71,7 +71,7 @@ void free_iL_arr(void);
 /* helpers */
 int _putchar(char c);
 void print_err(char *message);
-int str_to_int(const char *str, int *result);
+int str_to_int(const char *str);
 void print_list(stack_t *head);
 
 char ***create_iL_arr(node_st *raw_codes);

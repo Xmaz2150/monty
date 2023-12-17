@@ -23,12 +23,15 @@ int main(int ac, char **av)
 	(void)av;
 	if (ac != 2)
 	{
-		print_err("USAGE: monty file\n");
+		print_err("USAGE: monty file");
 		exit(EXIT_FAILURE);
 	}
 	file = fopen(av[1], "r");
 	if (file == NULL)
-		return (1);
+	{
+		print_err(str_concat("Error: Can't open file ", av[1]));
+		exit(EXIT_FAILURE);
+	}
 	sample = read_file(file);
 
 	fclose(file);
@@ -93,7 +96,10 @@ void _execute(stack_t **my_stack)
 		else
 		{
 			if (is_code(tmp[n][0], my_stack, n) != 0)
+			{
 				print_err(str_concat("L2: unknown instruction ", tmp[n][0]));
+				exit(EXIT_FAILURE);
+			}
 		}
 		n++;
 	}
